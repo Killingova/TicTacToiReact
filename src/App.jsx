@@ -1,19 +1,35 @@
+import { useState } from 'react';
+
+// Import der GameBoard- und Player-Komponenten
 import GameBoard from "./components/GameBoard";
 import Player from "./components/Player";
 
+// Hauptkomponente der App
 function App() {
+  // useState Hook zur Verwaltung des activePlayer-Status, initialisiert auf 'X'
+  const [activePlayer, setActivePlayer] = useState('X');
+
+  // Funktion zur Behandlung der Auswahl eines Spielfeldes und zum Umschalten des aktiven Spielers
+  function handleSelectSquare() {
+    // Aktualisieren des activePlayer-Status, Umschalten zwischen 'X' und 'O'
+    setActivePlayer((curActivePlayer) => curActivePlayer === 'X' ? 'O' : 'X');
+  }
+
+  // Rückgabe der Hauptstruktur des Spiels
   return (
     <main>
       <div id="game-container">
-        <ol id="players">
-          <Player initialName="Player 1" symbol="X"/>
-          <Player initialName="Player 2" symbol="O"/>
+        <ol id="players" className="highlight-player">
+          {/* Rendern der Player-Komponenten, Weitergabe von initialName, symbol und isActive Props */}
+          <Player initialName="Player 1" symbol="X" isActive={activePlayer === 'X'} />
+          <Player initialName="Player 2" symbol="O" isActive={activePlayer === 'O'} />
         </ol>
-        <GameBoard/>
+        {/* Rendern der GameBoard-Komponente, Weitergabe der handleSelectSquare- und activePlayerSymbol-Props */}
+        <GameBoard onSelectSquare={handleSelectSquare} activePlayerSymbol={activePlayer} />
       </div>
       LOG
     </main>
   );
 }
 
-export default App
+export default App;

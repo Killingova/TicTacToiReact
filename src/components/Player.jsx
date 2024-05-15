@@ -1,35 +1,41 @@
 import { useState } from "react";
 
-export default function Player({initialName, symbol}) {
-const [playerName, setPlayerName ] = useState(initialName);
-const [isEditing, setIsEditing] = useState(false);
+// Definition der Player-Komponente, die initialName, symbol und isActive als Props entgegennimmt
+export default function Player({ initialName, symbol, isActive }) {
+  // useState Hook zum Verwalten des playerName-Status, initialisiert mit initialName-Prop
+  const [playerName, setPlayerName] = useState(initialName);
 
-function handleEditClick(){
-    setIsEditing((editing)=> !editing);
-}
+  // useState Hook zum Verwalten des isEditing-Status, initialisiert auf false
+  const [isEditing, setIsEditing] = useState(false);
 
-function handleChange(event){
-    console.log(event);
+  // Funktion zum Umschalten des isEditing-Status, wenn die Bearbeiten-Schaltfläche angeklickt wird
+  function handleEditClick() {
+    setIsEditing((editing) => !editing);
+  }
+
+  // Funktion zum Aktualisieren des playerName-Status, wenn sich der Eingabewert ändert
+  function handleChange(event) {
     setPlayerName(event.target.value);
-}
+  }
 
-let editablePlayerName = <span className="player-name">{playerName}</span>;
-//let btnCaption ='Edit';
+  // Initiales JSX-Element zur Anzeige des Spielernamens als Span
+  let editablePlayerName = <span className="player-name">{playerName}</span>;
 
-if(isEditing){
+  // Wenn isEditing true ist, wird das JSX-Element in ein Eingabefeld zur Bearbeitung des Spielernamens geändert
+  if (isEditing) {
     editablePlayerName = (
-        <input type="text" required value={playerName} onChange={handleChange} />
+      <input type="text" required value={playerName} onChange={handleChange} />
     );
-    //let btnCaption='Save';
-}
+  }
 
-    return (
-     <li>
-        <span className="player">
-         {editablePlayerName}
-    <span className="player-symbol">{symbol}</span>
-    </span>
-    <button onClick={handleEditClick}>{isEditing ? 'Save' : 'Edit'}</button>
-  </li>
-    );
+  // Rückgabe des Spieler-Items, bedingtes Hinzufügen der 'active'-Klasse, wenn isActive true ist
+  return (
+    <li className={isActive ? 'active' : undefined}>
+      <span className="player">
+        {editablePlayerName}
+        <span className="player-symbol">{symbol}</span>
+      </span>
+      <button onClick={handleEditClick}>{isEditing ? 'Speichern' : 'Bearbeiten'}</button>
+    </li>
+  );
 }
