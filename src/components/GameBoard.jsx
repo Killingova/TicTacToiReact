@@ -1,4 +1,4 @@
-import { useState } from "react";
+
 
 // Initiales Spielfeld, ein 3x3-Array mit null-Werten
 const initialGameBoard = [
@@ -8,8 +8,17 @@ const initialGameBoard = [
 ];
 
 // Definition der GameBoard-Komponente, die onSelectSquare und activePlayerSymbol als Props entgegennimmt
-export default function GameBoard({ onSelectSquare, activePlayerSymbol }) {
-    // useState Hook zur Verwaltung des gameBoard-Status, initialisiert mit initialGameBoard
+export default function GameBoard({ onSelectSquare, turns}) {
+let gameBoard = initialGameBoard;
+
+for(const turn of turns) {
+    const {square, player} = turn;
+    const {row,col} = square;
+
+    gameBoard[row][col] = player;
+}
+
+/*     // useState Hook zur Verwaltung des gameBoard-Status, initialisiert mit initialGameBoard
     const [gameBoard, setGameBoard] = useState(initialGameBoard);
 
     // Funktion zur Behandlung der Auswahl eines Spielfeldes
@@ -25,7 +34,7 @@ export default function GameBoard({ onSelectSquare, activePlayerSymbol }) {
 
         // Aufrufen der onSelectSquare-Funktion, um den aktiven Spieler zu wechseln
         onSelectSquare();
-    }
+    } */
 
     // Rückgabe der Struktur des Spielfelds
     return (
@@ -38,7 +47,9 @@ export default function GameBoard({ onSelectSquare, activePlayerSymbol }) {
                         {row.map((playerSymbol, colIndex) => (
                             <li key={colIndex}>
                                 {/* Button zur Auswahl eines Spielfeldes, der handleSelectSquare aufruft */}
-                                <button onClick={() => handleSelectSquare(rowIndex, colIndex)}>
+                                <button onClick={ () => onSelectSquare(rowIndex,colIndex)} 
+                                disabled={playerSymbol !== null}
+                                >
                                     {playerSymbol}
                                 </button>
                             </li>

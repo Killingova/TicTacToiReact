@@ -1,18 +1,41 @@
 import { useState } from 'react';
-
+import Log from './components/Log';
 // Import der GameBoard- und Player-Komponenten
 import GameBoard from "./components/GameBoard";
 import Player from "./components/Player";
 
+function deriveActivePlayer(gameTurns) {
+  let currentPlayer = 'X';
+
+  if (gameTurns.length > 0 && gameTurns[0].player === 'X') {
+    currentPlayer = 'O';
+  }
+
+  return currentPlayer;
+
+}
+
 // Hauptkomponente der App
 function App() {
+  const [gameTurns, setGameTurns] = useState([]);
   // useState Hook zur Verwaltung des activePlayer-Status, initialisiert auf 'X'
-  const [activePlayer, setActivePlayer] = useState('X');
+      // const [activePlayer, setActivePlayer] = useState('X');
+
+const activePlayer = deriveActivePlayer(gameTurns);
 
   // Funktion zur Behandlung der Auswahl eines Spielfeldes und zum Umschalten des aktiven Spielers
-  function handleSelectSquare() {
+  function handleSelectSquare(rowIndex, colIndex) {
     // Aktualisieren des activePlayer-Status, Umschalten zwischen 'X' und 'O'
-    setActivePlayer((curActivePlayer) => curActivePlayer === 'X' ? 'O' : 'X');
+        // setActivePlayer((curActivePlayer) => curActivePlayer === 'X' ? 'O' : 'X');
+     setGameTurns((prevTurns) => {
+      const currentPlayer = deriveActivePlayer(prevTurns);
+
+      const updatedTurns = [
+        {square: {row: rowIndex, col: colIndex}, player: currentPlayer} , ...prevTurns
+      ];
+
+      return updatedTurns;
+    });
   }
 
   // Rückgabe der Hauptstruktur des Spiels
@@ -25,9 +48,12 @@ function App() {
           <Player initialName="Player 2" symbol="O" isActive={activePlayer === 'O'} />
         </ol>
         {/* Rendern der GameBoard-Komponente, Weitergabe der handleSelectSquare- und activePlayerSymbol-Props */}
-        <GameBoard onSelectSquare={handleSelectSquare} activePlayerSymbol={activePlayer} />
+        <GameBoard
+        onSelectSquare={handleSelectSquare}
+        turns = {gameTurns} 
+        />
       </div>
-      LOG
+      <Log turns={gameTurns}/>
     </main>
   );
 }
